@@ -4,7 +4,7 @@
  * @returns {object<string, any>}
  */
 export function args({ argv }) {
-	let force = argv.includes("-f") || argv.includes("--force");
+	const force = argv.includes("-f") || argv.includes("--force");
 
 	return { force };
 }
