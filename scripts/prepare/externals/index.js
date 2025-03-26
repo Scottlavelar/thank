@@ -4,7 +4,7 @@ import { parse } from "yaml";
 import { exists } from "../exists/index.js";
 import { fetchWithTimeout } from "../fetchWithTimeout/index.js";
 
-let sources = new Map([
+const sources = new Map([
 	[
 		"kikobeats.json",
 		"https://raw.githubusercontent.com/Kikobeats/top-crawler-agents/master/index.json",
@@ -21,16 +21,16 @@ let sources = new Map([
 	["myip.ms.json", "https://myip.ms/files/bots/live_webcrawlers.txt"],
 ]);
 
-let { log, warn } = console;
+const { log, warn } = console;
 
-let getters = [];
+const getters = [];
 
 async function abort(response, collection, destination) {
 	if (!response.ok) {
 		warn(
 			`Failed to fetch ${sources.get(collection)}: ${response.status} ${response.statusText}`,
 		);
-		let file = await readFile(destination, "utf8");
+		const file = await readFile(destination, "utf8");
 		if (!file.startsWith("[")) {
 			throw new Error("Existing content is not a valid JSON array");
 		}
@@ -49,19 +49,19 @@ getters.push(async function monperrus({
 	dir = join(__dirname, ".."),
 	force = false,
 } = {}) {
-	let collection = "monperrus.json";
-	let destination = join(dir, collection);
+	const collection = "monperrus.json";
+	const destination = join(dir, collection);
 	if (!force && (await exists(destination))) {
 		log(`Skip ${destination} - Already exists.`);
 		return 0;
 	}
 
 	log(`Download content for ${destination}`);
-	let response = await fetchWithTimeout(sources.get(collection));
+	const response = await fetchWithTimeout(sources.get(collection));
 	if ((await abort(response, collection, destination)) === true) {
 		return 0;
 	}
-	let list = (await response.json()).map(({ instances }) => instances).flat();
+	const list = (await response.json()).map(({ instances }) => instances).flat();
 	log(`Write ${destination}`);
 	await writeFile(destination, JSON.stringify(list, null, 2) + "\n");
 	return 1;
@@ -77,19 +77,19 @@ getters.push(async function kikobeats({
 	dir = join(__dirname, ".."),
 	force = false,
 } = {}) {
-	let collection = "kikobeats.json";
-	let destination = join(dir, collection);
+	const collection = "kikobeats.json";
+	const destination = join(dir, collection);
 	if (!force && (await exists(destination))) {
 		log(`Skip ${destination} - Already exists.`);
 		return 0;
 	}
 
 	log(`Download content for ${destination}`);
-	let response = await fetchWithTimeout(sources.get(collection));
+	const response = await fetchWithTimeout(sources.get(collection));
 	if ((await abort(response, collection, destination)) === true) {
 		return 0;
 	}
-	let list = await response.json();
+	const list = await response.json();
 	log(`Write ${destination}`);
 	await writeFile(destination, JSON.stringify(list, null, 2) + "\n");
 	return 1;
@@ -105,18 +105,18 @@ getters.push(async function matomoOrg({
 	dir = join(__dirname, ".."),
 	force = false,
 } = {}) {
-	let collection = "matomo-org.json";
-	let destination = join(dir, collection);
+	const collection = "matomo-org.json";
+	const destination = join(dir, collection);
 	if (!force && (await exists(destination))) {
 		log(`Skip ${destination} - Already exists.`);
 		return 0;
 	}
 	log(`Download content for ${destination}`);
-	let response = await fetchWithTimeout(sources.get(collection));
+	const response = await fetchWithTimeout(sources.get(collection));
 	if ((await abort(response, collection, destination)) === true) {
 		return 0;
 	}
-	let list = parse(await response.text()).map(
+	const list = parse(await response.text()).map(
 		({ user_agent }) => user_agent, // eslint-disable-line camelcase
 	);
 	log(`Write ${destination}`);
@@ -134,14 +134,14 @@ getters.push(async function userAgentsNet({
 	dir = join(__dirname, ".."),
 	force = false,
 } = {}) {
-	let collection = "user-agents.net.json";
-	let destination = join(dir, collection);
+	const collection = "user-agents.net.json";
+	const destination = join(dir, collection);
 	if (!force && (await exists(destination))) {
 		log(`Skip ${destination} - Already exists.`);
 		return 0;
 	}
 	log(`Download content for ${destination}`);
-	let response = await fetchWithTimeout(sources.get(collection), {
+	const response = await fetchWithTimeout(sources.get(collection), {
 		method: "POST",
 		body: [
 			["crawler", "true"],
@@ -157,7 +157,7 @@ getters.push(async function userAgentsNet({
 	if ((await abort(response, collection, destination)) === true) {
 		return 0;
 	}
-	let list = (await response.json()).filter(
+	const list = (await response.json()).filter(
 		(ua) =>
 			!/(\.NET CLR|^NSPlayer|RadiosNet|RMA\/|stagefright|^Sony|^UnityPlayer|^User-Agent:|^VLC\/|^Windows-Media-Player\/)/.test(
 				ua,
@@ -178,18 +178,18 @@ getters.push(async function myipMs({
 	dir = join(__dirname, ".."),
 	force = false,
 } = {}) {
-	let collection = "myip.ms.json";
-	let destination = join(dir, collection);
+	const collection = "myip.ms.json";
+	const destination = join(dir, collection);
 	if (!force && (await exists(destination))) {
 		log(`Skip ${destination} - Already exists.`);
 		return 0;
 	}
 	log(`Download content for ${destination}`);
-	let response = await fetchWithTimeout(sources.get(collection));
+	const response = await fetchWithTimeout(sources.get(collection));
 	if ((await abort(response, collection, destination)) === true) {
 		return 0;
 	}
-	let list = (await response.text())
+	const list = (await response.text())
 		.split("\n")
 		.map((line) => line.split("records - ")[1])
 		.filter(Boolean);
@@ -204,5 +204,5 @@ getters.push(async function myipMs({
  * @param {boolean} [ø.force] Read even if file exists
  * @returns {Promise<number[]>}
  */
-export let download = ({ dir, force = false } = {}) =>
+export const download = ({ dir, force = false } = {}) =>
 	Promise.all(getters.map((fn) => fn({ dir, force })));
