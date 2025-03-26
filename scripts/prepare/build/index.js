@@ -7,7 +7,7 @@ import { parse } from "yaml";
  * @param {string} path File path
  * @returns {string[]}
  */
-const readFixturesYaml = async (path) =>
+let readFixturesYaml = async (path) =>
 	Object.values(parse((await readFile(path)).toString())).flat();
 
 /**
@@ -41,17 +41,17 @@ async function browsers({ fixturesDirectory }) {
  * @returns {string[]}
  */
 async function crawlers({ fixturesDirectory, downloadedDirectory }) {
-	const crawlers = await readFixturesYaml(
+	let crawlers = await readFixturesYaml(
 		join(fixturesDirectory, "crawlers.yml"),
 	);
-	const browsersList = await browsers({ fixturesDirectory });
-	const downloaded = [];
-	for (const file of await readdir(downloadedDirectory)) {
+	let browsersList = await browsers({ fixturesDirectory });
+	let downloaded = [];
+	for (let file of await readdir(downloadedDirectory)) {
 		if (!file.endsWith(".json")) {
 			continue;
 		}
 		try {
-			const content = await readFile(join(downloadedDirectory, file));
+			let content = await readFile(join(downloadedDirectory, file));
 			downloaded.push(...JSON.parse(content.toString()));
 		} catch (error) {
 			// Ignore
