@@ -8,9 +8,9 @@ import { writeFile } from "node:fs/promises";
  * @param {string} key
  * @returns {object[]}
  */
-let sortBy = (list, key) =>
+const sortBy = (list, key) =>
 	list.sort(function (a, b) {
-		let [_a, _b] = [a, b].map((i) => i[key]);
+		const [_a, _b] = [a, b].map((i) => i[key]);
 		if (_a < _b) return 1;
 		if (_a > _b) return -1;
 		return 0;
@@ -19,7 +19,7 @@ let sortBy = (list, key) =>
 start();
 
 async function start() {
-	let response = await fetch(
+	const response = await fetch(
 		"https://api.github.com/repos/omrilotan/isbot/contributors",
 		{
 			headers: new Headers([
@@ -28,7 +28,7 @@ async function start() {
 			]),
 		},
 	);
-	let contributors = sortBy(await response.json(), "contributions")
+	const contributors = sortBy(await response.json(), "contributions")
 		.map(({ login, html_url: url }) => `${login} (${url})`)
 		.join("\n");
 
