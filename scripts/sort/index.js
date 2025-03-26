@@ -7,7 +7,7 @@ import { sortYamlFile } from "./sortYamlFile/index.js";
 start();
 
 async function start() {
-	const errors = [];
+	let errors = [];
 
 	async function call(fn, ...args) {
 		try {
