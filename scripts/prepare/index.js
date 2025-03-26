@@ -6,7 +6,7 @@ import { args } from "./args/index.js";
 import { build } from "./build/index.js";
 import { download } from "./externals/index.js";
 
-const { log } = console;
+let { log } = console;
 
 /**
  * scripts/prepare.js [-f] [--force]
@@ -19,13 +19,13 @@ start(process);
  * @returns {void}
  */
 async function start({ argv }) {
-	const { force } = args({ argv });
-	const fixturesDirectory = join("fixtures");
-	const downloadedDirectory = join(fixturesDirectory, "downloaded");
+	let { force } = args({ argv });
+	let fixturesDirectory = join("fixtures");
+	let downloadedDirectory = join(fixturesDirectory, "downloaded");
 
 	await mkdir(downloadedDirectory, { recursive: true });
-	const results = await download({ dir: downloadedDirectory, force });
-	const news = results.reduce((a, b) => a + b);
+	let results = await download({ dir: downloadedDirectory, force });
+	let news = results.reduce((a, b) => a + b);
 	switch (news) {
 		case 0:
 			log("No new files were downloaded");
@@ -41,7 +41,7 @@ async function start({ argv }) {
 	}
 
 	log("Create fixtures JSON");
-	const { browsers, crawlers } = await build({
+	let { browsers, crawlers } = await build({
 		fixturesDirectory,
 		downloadedDirectory,
 	});
