@@ -8,9 +8,9 @@ import { sort } from "../sort/index.js";
  * @return {Promise<void>}
  */
 export async function sortYamlFile(filepath) {
-	const data = YAML.parse((await readFile(filepath)).toString());
+	let data = YAML.parse((await readFile(filepath)).toString());
 
-	const sorted = Object.fromEntries(
+	let sorted = Object.fromEntries(
 		Object.entries(
 			data,
 
@@ -18,7 +18,7 @@ export async function sortYamlFile(filepath) {
 		)
 			.sort(
 				([_a], [_b]) => {
-					const [a, b] = [_a, _b].map((i) => i.toLowerCase());
+					let [a, b] = [_a, _b].map((i) => i.toLowerCase());
 
 					return a > b ? 1 : a < b ? -1 : 0;
 				},
