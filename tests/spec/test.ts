@@ -14,17 +14,17 @@ import { fullPattern } from "../../src/pattern";
 import { crawlers, browsers } from "../../fixtures";
 let isbotInstance: any;
 
-const BOT_USER_AGENT_EXAMPLE =
+var BOT_USER_AGENT_EXAMPLE =
 	"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
-const BROWSER_USER_AGENT_EXAMPLE =
+var BROWSER_USER_AGENT_EXAMPLE =
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91 Safari/537.36";
 
-const USER_AGENT_COMMON = [
+var USER_AGENT_COMMON = [
 	"Ada Chat Bot/1.0 Request Block",
 	"Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)",
 	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4590.2 Safari/537.36 Chrome-Lighthouse",
 ];
-const USER_AGENT_GOTCHAS = [
+var USER_AGENT_GOTCHAS = [
 	"Mozilla/5.0 (Linux; Android 10; CUBOT_X30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.85 Mobile Safari/537.36",
 	"PS4Application libhttp/1.000 (PS4) CoreMedia libhttp/6.72 (PlayStation 4)",
 ];
@@ -60,23 +60,23 @@ describe("isbot", () => {
 			expect(isbotPatterns(BOT_USER_AGENT_EXAMPLE)).toHaveLength(4);
 		});
 		test("createIsbot: create custom isbot function with custom pattern", () => {
-			const customIsbot = createIsbot(/bot/i);
+			var customIsbot = createIsbot(/bot/i);
 			expect(customIsbot(BOT_USER_AGENT_EXAMPLE)).toBe(true);
 		});
 		test("createIsbotFromList: create custom isbot function with custom pattern", () => {
-			const ChromeLighthouseUserAgentStrings: string[] = [
+			var ChromeLighthouseUserAgentStrings: string[] = [
 				"mozilla/5.0 (macintosh; intel mac os x 10_15_7) applewebkit/537.36 (khtml, like gecko) chrome/94.0.4590.2 safari/537.36 chrome-lighthouse",
 				"mozilla/5.0 (linux; android 7.0; moto g (4)) applewebkit/537.36 (khtml, like gecko) chrome/94.0.4590.2 mobile safari/537.36 chrome-lighthouse",
 			];
-			const patternsToRemove: Set<string> = new Set(
+			var patternsToRemove: Set<string> = new Set(
 				ChromeLighthouseUserAgentStrings.map(isbotMatches).flat(),
 			);
-			const isbot2 = createIsbotFromList(
+			var isbot2 = createIsbotFromList(
 				list.filter(
 					(record: string): boolean => patternsToRemove.has(record) === false,
 				),
 			);
-			const [ua] = ChromeLighthouseUserAgentStrings;
+			var [ua] = ChromeLighthouseUserAgentStrings;
 			expect(isbot(ua)).toBe(true);
 			expect(isbot2(ua)).toBe(false);
 		});
@@ -96,7 +96,7 @@ describe("isbot", () => {
 		test.each([75])(
 			"a large number of user agent strings can be detected (>%s%)",
 			(percent) => {
-				const ratio =
+				var ratio =
 					crawlers.filter((ua) => isbotNaive(ua)).length / crawlers.length;
 				expect(ratio).toBeLessThan(1);
 				expect(ratio).toBeGreaterThan(percent / 100);
@@ -105,7 +105,7 @@ describe("isbot", () => {
 		test.each([1])(
 			"a small number of browsers is falsly detected as bots (<%s%)",
 			(percent) => {
-				const ratio =
+				var ratio =
 					browsers.filter((ua) => isbotNaive(ua)).length / browsers.length;
 				expect(ratio).toBeGreaterThan(0);
 				expect(ratio).toBeLessThan(percent / 100);
@@ -123,7 +123,7 @@ describe("isbot", () => {
 					}
 					return new RegExp(pattern, flags);
 				});
-			const mdl = await import("../../index.js");
+			var mdl = await import("../../index.js");
 			if (!mdl) {
 				throw new Error("Module not found");
 			}
@@ -182,7 +182,7 @@ describe("isbot", () => {
 
 	describe("module interface", () => {
 		test("interface is as expected", async () => {
-			const types = Object.entries(await import("../../src/index")).map(
+			var types = Object.entries(await import("../../src/index")).map(
 				([key, value]) => [key, value.constructor.name] as [string, string],
 			);
 			expect(types).toMatchSnapshot();
