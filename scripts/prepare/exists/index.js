@@ -6,7 +6,7 @@ import { stat } from "node:fs/promises";
  */
 export async function exists(path) {
 	try {
-		const stats = await stat(path);
+		let stats = await stat(path);
 		return stats.isFile() || stats.isSymbolicLink() || stats.isDirectory();
 	} catch (error) {
 		return false;
