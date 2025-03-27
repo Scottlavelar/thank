@@ -1,4 +1,4 @@
-let {
+const {
 	name,
 	description,
 	version,
